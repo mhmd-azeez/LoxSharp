@@ -70,7 +70,11 @@ namespace LoxSharp
 
                 case TokenType.Slash:
                     CheckNumberOperands(expr.Operator, left, right);
-                    return (double)left / (double)right;
+
+                    var denominator = (double)right;
+                    CheckDevideByZero(expr.Operator, denominator);
+
+                    return (double)left / denominator;
 
                 case TokenType.Star:
                     CheckNumberOperands(expr.Operator, left, right);
@@ -87,6 +91,10 @@ namespace LoxSharp
                     {
                         return t1 + t2;
                     }
+                    else if (left is string || right is string)
+                    {
+                        return Stringify(left) + Stringify(right);
+                    }
                     else if (left is double n1 && right is double n2)
                     {
                         return n1 + n2;
@@ -97,6 +105,14 @@ namespace LoxSharp
 
             // Unreachable
             return null;
+        }
+
+        private void CheckDevideByZero(Token @operator, double denominator)
+        {
+            if (denominator == 0)
+            {
+                throw new RuntimeException(@operator, "Can't devide by zero.");
+            }
         }
 
         private void CheckNumberOperands(Token @operator, object left, object right)
