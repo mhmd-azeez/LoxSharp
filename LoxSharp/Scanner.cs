@@ -172,6 +172,7 @@ namespace LoxSharp
             var value = _source.Substring(_start + 1, _current - _start - 1);
             AddToken(TokenType.String, value);
 
+            Advance();
         }
 
         void ScanNumber()
