@@ -17,12 +17,19 @@ namespace LoxSharp.Tool
             }
 
             var outputDir = args[0];
+
             DefineAst(outputDir, "Expr", new List<string>
             {
                 "Binary    : Expr Left, Token Operator, Expr Right",
                 "Unary     : Token Operator, Expr Right",
                 "Literal   : object Value",
                 "Grouping  : Expr Expression",
+            });
+
+            DefineAst(outputDir, "Stmt", new List<string>
+            {
+                "Expression    : Expr Expr",
+                "Print  : Expr Expr",
             });
         }
 
@@ -37,7 +44,7 @@ namespace LoxSharp.Tool
 
                 writer.WriteLine($"    public abstract class {baseName}");
                 writer.WriteLine("    {");
-                writer.WriteLine("        public abstract T Accept<T>(IVisitor<T> visitor);");
+                writer.WriteLine($"        public abstract T Accept<T>(I{baseName}Visitor<T> visitor);");
                 writer.WriteLine("    }");
 
                 foreach (var child in children)
@@ -61,7 +68,7 @@ namespace LoxSharp.Tool
 
         private static void DefineVisitor(StreamWriter writer, string baseName, List<string> children)
         {
-            writer.WriteLine("    public interface IVisitor<T>");
+            writer.WriteLine($"    public interface I{baseName}Visitor<T>");
             writer.WriteLine("    {");
 
             foreach(var child in children)
@@ -107,7 +114,7 @@ namespace LoxSharp.Tool
 
             writer.WriteLine();
 
-            writer.WriteLine("        public override T Accept<T>(IVisitor<T> visitor)");
+            writer.WriteLine($"        public override T Accept<T>(I{baseName}Visitor<T> visitor)");
             writer.WriteLine("        {");
             writer.WriteLine($"            return visitor.Visit{className}{baseName}(this);");
             writer.WriteLine("        }");

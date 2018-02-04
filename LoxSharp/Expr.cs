@@ -2,7 +2,7 @@ namespace LoxSharp
 {
     public abstract class Expr
     {
-        public abstract T Accept<T>(IVisitor<T> visitor);
+        public abstract T Accept<T>(IExprVisitor<T> visitor);
     }
 
     public class Binary : Expr
@@ -18,7 +18,7 @@ namespace LoxSharp
         public Token Operator { get; }
         public Expr Right { get; }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExprVisitor<T> visitor)
         {
             return visitor.VisitBinaryExpr(this);
         }
@@ -35,7 +35,7 @@ namespace LoxSharp
         public Token Operator { get; }
         public Expr Right { get; }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExprVisitor<T> visitor)
         {
             return visitor.VisitUnaryExpr(this);
         }
@@ -50,7 +50,7 @@ namespace LoxSharp
 
         public object Value { get; }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExprVisitor<T> visitor)
         {
             return visitor.VisitLiteralExpr(this);
         }
@@ -65,13 +65,13 @@ namespace LoxSharp
 
         public Expr Expression { get; }
 
-        public override T Accept<T>(IVisitor<T> visitor)
+        public override T Accept<T>(IExprVisitor<T> visitor)
         {
             return visitor.VisitGroupingExpr(this);
         }
     }
 
-    public interface IVisitor<T>
+    public interface IExprVisitor<T>
     {
         T VisitBinaryExpr(Binary expr);
         T VisitUnaryExpr(Unary expr);

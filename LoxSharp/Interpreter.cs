@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoxSharp
 {
-    public class Interpreter : IVisitor<object>
+    public class Interpreter : IExprVisitor<object>
     {
         public void Interpret(Expr expression)
         {
