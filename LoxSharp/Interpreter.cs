@@ -6,19 +6,26 @@ using System.Threading.Tasks;
 
 namespace LoxSharp
 {
-    public class Interpreter : IExprVisitor<object>
+    public class Interpreter : IExprVisitor<object>, IStmtVisitor<object>
     {
-        public void Interpret(Expr expression)
+        public void Interpret(List<Stmt> statements)
         {
             try
             {
-                var value = Evaluate(expression);
-                Console.WriteLine(Stringify(value));
+                foreach(var stmt in statements)
+                {
+                    Execute(stmt);
+                }
             }
-            catch(RuntimeException ex)
+            catch (RuntimeException ex)
             {
                 Lox.RuntimeError(ex);
             }
+        }
+
+        private void Execute(Stmt stmt)
+        {
+            stmt.Accept(this);
         }
 
         private string Stringify(object value)
@@ -46,7 +53,7 @@ namespace LoxSharp
             var left = Evaluate(expr.Left);
             var right = Evaluate(expr.Right);
 
-            switch(expr.Operator.Type)
+            switch (expr.Operator.Type)
             {
                 case TokenType.Greater:
                     CheckNumberOperands(expr.Operator, left, right);
@@ -145,7 +152,7 @@ namespace LoxSharp
         {
             var right = Evaluate(expr.Right);
 
-            switch(expr.Operator.Type)
+            switch (expr.Operator.Type)
             {
                 case TokenType.Minus:
                     CheckNumberOperand(expr.Operator, right);
@@ -176,6 +183,19 @@ namespace LoxSharp
         private object Evaluate(Expr expression)
         {
             return expression.Accept(this);
+        }
+
+        public object VisitExpressionStmt(Expression stmt)
+        {
+            Evaluate(stmt.Expr);
+            return null;
+        }
+
+        public object VisitPrintStmt(Print stmt)
+        {
+            var value = Evaluate(stmt.Expr);
+            Console.WriteLine(Stringify(value));
+            return null;
         }
     }
 }

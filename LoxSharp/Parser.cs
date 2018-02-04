@@ -14,16 +14,44 @@ namespace LoxSharp
             _tokens = tokens;
         }
 
-        public Expr Parse()
+        public List<Stmt> Parse()
         {
+            var list = new List<Stmt>();
             try
             {
-                return Expression();
+                while (!IsAtEnd())
+                {
+                    list.Add(Statement());
+                }
             }
             catch (ParseException)
             {
                 return null;
             }
+
+            return list;
+        }
+
+        private Stmt Statement()
+        {
+            if (Match(TokenType.Print))
+                return PrintStatement();
+
+            return ExpressionStatement();
+        }
+
+        private Stmt ExpressionStatement()
+        {
+            var value = Expression();
+            Consume(TokenType.Semicolon, "Expected ';' after value.");
+            return new Expression(value);
+        }
+
+        private Stmt PrintStatement()
+        {
+            var value = Expression();
+            Consume(TokenType.Semicolon, "Expected ';' after value.");
+            return new Print(value);
         }
 
         private Expr Expression()
