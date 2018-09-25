@@ -48,7 +48,12 @@ namespace LoxSharp
             while(true)
             {
                 Console.Write("> ");
-                Run(Console.ReadLine());
+
+                var line = Console.ReadLine();
+                if (!line.TrimEnd().EndsWith(";"))
+                    line = line + ";";
+
+                Run(line);
 
                 _hadError = false;
             }
