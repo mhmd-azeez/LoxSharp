@@ -69,10 +69,23 @@ namespace LoxSharp
             if (Match(TokenType.Print))
                 return PrintStatement();
 
+            if (Match(TokenType.While))
+                return WhileStatement();
+
             if (Match(TokenType.LeftBrace))
                 return new Stmt.Block(Block());
 
             return ExpressionStatement();
+        }
+
+        private Stmt WhileStatement()
+        {
+            Consume(TokenType.LeftParenthesis, "Expect '(' after 'while'.");
+            Expr condition = Expression();
+            Consume(TokenType.RightParenthesis, "Expect ')' after condition.");
+            Stmt body = Statement();
+
+            return new Stmt.While(condition, body);
         }
 
         private Stmt IfStatement()

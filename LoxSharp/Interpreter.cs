@@ -290,5 +290,15 @@ namespace LoxSharp
 
             return Evaluate(expr.Right);
         }
+
+        public object VisitWhileStmt(Stmt.While stmt)
+        {
+            while(IsTruthy(Evaluate(stmt.Condition)))
+            {
+                Execute(stmt.Body);
+            }
+
+            return null;
+        }
     }
 }

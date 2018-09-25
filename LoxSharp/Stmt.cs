@@ -87,6 +87,23 @@ namespace LoxSharp
             }
         }
 
+        public class While : Stmt
+        {
+            public While(Expr @condition, Stmt @body)
+            {
+                Condition = @condition;
+                Body = @body;
+            }
+
+            public Expr Condition { get; }
+            public Stmt Body { get; }
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitWhileStmt(this);
+            }
+        }
+
     }
 
     public interface IStmtVisitor<T>
@@ -96,5 +113,6 @@ namespace LoxSharp
         T VisitIfStmt(Stmt.If stmt);
         T VisitPrintStmt(Stmt.Print stmt);
         T VisitVarStmt(Stmt.Var stmt);
+        T VisitWhileStmt(Stmt.While stmt);
     }
 }

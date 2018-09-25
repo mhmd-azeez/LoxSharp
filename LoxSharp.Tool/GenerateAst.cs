@@ -36,6 +36,7 @@ namespace LoxSharp.Tool
                 "If             : Expr Condition, Stmt ThenBranch, Stmt ElseBranch",
                 "Print          : Expr Expr",
                 "Var            : Token Name, Expr Initializer",
+                "While          : Expr Condition, Stmt Body",
             });
         }
 
