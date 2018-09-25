@@ -15,4 +15,14 @@ namespace LoxSharp
 
         public Token Token { get; }
     }
+
+    public class Return : RuntimeException
+    {
+        public Return(object value) : base (null, null)
+        {
+            Value = value;
+        }
+
+        public object Value { get; set; }
+    }
 }

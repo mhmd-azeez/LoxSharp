@@ -102,6 +102,23 @@ namespace LoxSharp
             }
         }
 
+        public class Return : Stmt
+        {
+            public Return(Token @keyword, Expr @value)
+            {
+                Keyword = @keyword;
+                Value = @value;
+            }
+
+            public Token Keyword { get; }
+            public Expr Value { get; }
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitReturnStmt(this);
+            }
+        }
+
         public class Var : Stmt
         {
             public Var(Token @name, Expr @initializer)
@@ -146,6 +163,7 @@ namespace LoxSharp
         T VisitFunctionStmt(Stmt.Function stmt);
         T VisitIfStmt(Stmt.If stmt);
         T VisitPrintStmt(Stmt.Print stmt);
+        T VisitReturnStmt(Stmt.Return stmt);
         T VisitVarStmt(Stmt.Var stmt);
         T VisitWhileStmt(Stmt.While stmt);
     }

@@ -104,6 +104,9 @@ namespace LoxSharp
             if (Match(TokenType.Print))
                 return PrintStatement();
 
+            if (Match(TokenType.Return))
+                return ReturnStatement();
+
             if (Match(TokenType.While))
                 return WhileStatement();
 
@@ -111,6 +114,20 @@ namespace LoxSharp
                 return new Stmt.Block(Block());
 
             return ExpressionStatement();
+        }
+
+        private Stmt ReturnStatement()
+        {
+            var keyword = Previous();
+
+            Expr value = null;
+            if (!Check(TokenType.Semicolon))
+            {
+                value = Expression();
+            }
+
+            Consume(TokenType.Semicolon, "Expect ';' after return value.");
+            return new Stmt.Return(keyword, value);
         }
 
         private Stmt BreakStatement()
