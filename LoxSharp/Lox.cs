@@ -10,15 +10,17 @@ namespace LoxSharp
 
         static readonly Interpreter _interpreter = new Interpreter();
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            int exitCode = 0;
+
             if (args.Length > 2)
             {
                 Console.WriteLine("Usage: loxsharp script [stay]");
             }
             else if (args.Length > 0)
             {
-                RunFile(args[0]);
+                exitCode = RunFile(args[0]);
 
                 if (args.Length == 2 && string.Equals(args[1], "stay", StringComparison.InvariantCultureIgnoreCase))
                     Console.ReadLine();
@@ -27,6 +29,8 @@ namespace LoxSharp
             {
                 RunPrompt();
             }
+
+            return exitCode;
         }
 
         public static void RuntimeError(RuntimeException ex)
@@ -35,15 +39,17 @@ namespace LoxSharp
             _hadRuntimeError = true;
         }
 
-        static void RunFile(string path)
+        static int RunFile(string path)
         {
             var code = File.ReadAllText(path);
             Run(code);
 
             if (_hadError)
-                System.Environment.Exit(65);
-            if (_hadRuntimeError)
-                System.Environment.Exit(70);
+                return 65;
+            else if (_hadRuntimeError)
+                return 70;
+            else
+                return 0;
         }
 
         static void RunPrompt()
