@@ -36,6 +36,25 @@ namespace LoxSharp
             }
         }
 
+        public class If : Stmt
+        {
+            public If(Expr @condition, Stmt @thenbranch, Stmt @elsebranch)
+            {
+                Condition = @condition;
+                ThenBranch = @thenbranch;
+                ElseBranch = @elsebranch;
+            }
+
+            public Expr Condition { get; }
+            public Stmt ThenBranch { get; }
+            public Stmt ElseBranch { get; }
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitIfStmt(this);
+            }
+        }
+
         public class Print : Stmt
         {
             public Print(Expr @expr)
@@ -74,6 +93,7 @@ namespace LoxSharp
     {
         T VisitBlockStmt(Stmt.Block stmt);
         T VisitExpressionStmt(Stmt.Expression stmt);
+        T VisitIfStmt(Stmt.If stmt);
         T VisitPrintStmt(Stmt.Print stmt);
         T VisitVarStmt(Stmt.Var stmt);
     }

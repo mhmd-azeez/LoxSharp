@@ -24,6 +24,7 @@ namespace LoxSharp.Tool
                 "Binary    : Expr Left, Token Operator, Expr Right",
                 "Unary     : Token Operator, Expr Right",
                 "Literal   : object Value",
+                "Logical   : Expr Left, Token Operator, Expr Right",
                 "Grouping  : Expr Expression",
                 "Variable  : Token Name",
             });
@@ -32,6 +33,7 @@ namespace LoxSharp.Tool
             {
                 "Block          : IEnumerable<Stmt> Statements",
                 "Expression     : Expr Expr",
+                "If             : Expr Condition, Stmt ThenBranch, Stmt ElseBranch",
                 "Print          : Expr Expr",
                 "Var            : Token Name, Expr Initializer",
             });

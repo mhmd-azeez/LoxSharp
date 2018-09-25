@@ -63,6 +63,9 @@ namespace LoxSharp
 
         private Stmt Statement()
         {
+            if (Match(TokenType.If))
+                return IfStatement();
+
             if (Match(TokenType.Print))
                 return PrintStatement();
 
@@ -72,11 +75,28 @@ namespace LoxSharp
             return ExpressionStatement();
         }
 
+        private Stmt IfStatement()
+        {
+            Consume(TokenType.LeftParenthesis, "Expect '(' after 'if'.");
+            Expr condition = Expression();
+            Consume(TokenType.RightParenthesis, "Expect ')' after if condition.");
+
+            var thenBranch = Statement();
+
+            Stmt elseBranch = null;
+            if (Match(TokenType.Else))
+            {
+                elseBranch = Statement();
+            }
+
+            return new Stmt.If(condition, thenBranch, elseBranch);
+        }
+
         private IEnumerable<Stmt> Block()
         {
             var statements = new List<Stmt>();
 
-            while(!Check(TokenType.RightBrace) && !IsAtEnd())
+            while (!Check(TokenType.RightBrace) && !IsAtEnd())
             {
                 statements.Add(Declaration());
             }
@@ -106,7 +126,7 @@ namespace LoxSharp
 
         private Expr Assignment()
         {
-            var expr = Equality();
+            var expr = Or();
 
             if (Match(TokenType.Equal))
             {
@@ -120,6 +140,34 @@ namespace LoxSharp
                 }
 
                 Error(equals, "Invalid assignment target.");
+            }
+
+            return expr;
+        }
+
+        private Expr Or()
+        {
+            var expr = And();
+
+            while(Match(TokenType.Or))
+            {
+                var op = Previous();
+                var right = And();
+                expr = new Expr.Logical(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr And()
+        {
+            var expr = Equality();
+
+            while(Match(TokenType.And))
+            {
+                var op = Previous();
+                var right = Equality();
+                expr = new Expr.Logical(expr, op, right);
             }
 
             return expr;
@@ -143,7 +191,7 @@ namespace LoxSharp
         {
             var expr = Addition();
 
-            while(Match(TokenType.Greater, TokenType.GreaterEqual, TokenType.Less, TokenType.LessEqual))
+            while (Match(TokenType.Greater, TokenType.GreaterEqual, TokenType.Less, TokenType.LessEqual))
             {
                 var operater = Previous();
                 var right = Addition();
@@ -157,7 +205,7 @@ namespace LoxSharp
         {
             var expr = Multiplication();
 
-            while(Match(TokenType.Minus, TokenType.Plus))
+            while (Match(TokenType.Minus, TokenType.Plus))
             {
                 var operater = Previous();
                 var right = Multiplication();
@@ -171,7 +219,7 @@ namespace LoxSharp
         {
             var expr = Unary();
 
-            while(Match(TokenType.Slash, TokenType.Star))
+            while (Match(TokenType.Slash, TokenType.Star))
             {
                 var operater = Previous();
                 var right = Unary();
@@ -183,7 +231,7 @@ namespace LoxSharp
 
         private Expr Unary()
         {
-            while(Match(TokenType.Bang, TokenType.Minus))
+            while (Match(TokenType.Bang, TokenType.Minus))
             {
                 var operater = Previous();
                 var right = Unary();
@@ -236,11 +284,11 @@ namespace LoxSharp
         {
             Advance();
 
-            while(!IsAtEnd())
+            while (!IsAtEnd())
             {
                 if (Previous().Type == TokenType.Semicolon) return;
 
-                switch(Peek().Type)
+                switch (Peek().Type)
                 {
                     case TokenType.Class:
                     case TokenType.Fun:

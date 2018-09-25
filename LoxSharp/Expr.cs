@@ -74,6 +74,25 @@ namespace LoxSharp
             }
         }
 
+        public class Logical : Expr
+        {
+            public Logical(Expr @left, Token @operator, Expr @right)
+            {
+                Left = @left;
+                Operator = @operator;
+                Right = @right;
+            }
+
+            public Expr Left { get; }
+            public Token Operator { get; }
+            public Expr Right { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitLogicalExpr(this);
+            }
+        }
+
         public class Grouping : Expr
         {
             public Grouping(Expr @expression)
@@ -112,6 +131,7 @@ namespace LoxSharp
         T VisitBinaryExpr(Expr.Binary expr);
         T VisitUnaryExpr(Expr.Unary expr);
         T VisitLiteralExpr(Expr.Literal expr);
+        T VisitLogicalExpr(Expr.Logical expr);
         T VisitGroupingExpr(Expr.Grouping expr);
         T VisitVariableExpr(Expr.Variable expr);
     }

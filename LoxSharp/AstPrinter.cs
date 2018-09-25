@@ -32,6 +32,11 @@ namespace LoxSharp
             return expr.Value.ToString();
         }
 
+        public string VisitLogicalExpr(Expr.Logical expr)
+        {
+            return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
+        }
+
         public string VisitUnaryExpr(Expr.Unary expr)
         {
             return Parenthesize(expr.Operator.Lexeme, expr.Right);
@@ -48,7 +53,7 @@ namespace LoxSharp
 
             builder.Append($"({name}");
 
-            foreach(var expr in expressions)
+            foreach (var expr in expressions)
             {
                 builder.Append($" {expr.Accept(this)}");
             }

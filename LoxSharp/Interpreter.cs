@@ -15,7 +15,7 @@ namespace LoxSharp
         {
             try
             {
-                foreach(var stmt in statements)
+                foreach (var stmt in statements)
                 {
                     Execute(stmt);
                 }
@@ -245,7 +245,7 @@ namespace LoxSharp
             {
                 _environment = environment;
 
-                foreach(var statement in statements)
+                foreach (var statement in statements)
                 {
                     Execute(statement);
                 }
@@ -254,6 +254,41 @@ namespace LoxSharp
             {
                 _environment = previous;
             }
+        }
+
+        public object VisitIfStmt(Stmt.If stmt)
+        {
+            var condition = Evaluate(stmt.Condition);
+
+            if (IsTruthy(condition))
+            {
+                Execute(stmt.ThenBranch);
+            }
+            else if (stmt.ElseBranch != null)
+            {
+                Execute(stmt.ElseBranch);
+            }
+
+            return null;
+        }
+
+        // var thing = this && that;
+        // var thing = this || that;
+
+        public object VisitLogicalExpr(Expr.Logical expr)
+        {
+            var left = Evaluate(expr.Left);
+
+            if (expr.Operator.Type == TokenType.Or && IsTruthy(left))
+            {
+                return left;
+            }
+            else if (expr.Operator.Type == TokenType.And && !IsTruthy(left))
+            {
+                return left;
+            }
+
+            return Evaluate(expr.Right);
         }
     }
 }
