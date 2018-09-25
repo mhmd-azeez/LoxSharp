@@ -12,13 +12,16 @@ namespace LoxSharp
 
         static void Main(string[] args)
         {
-            if (args.Length > 1)
+            if (args.Length > 2)
             {
-                Console.WriteLine("Usage: loxsharp [script]");
+                Console.WriteLine("Usage: loxsharp script [stay]");
             }
-            else if (args.Length == 1)
+            else if (args.Length > 0)
             {
                 RunFile(args[0]);
+
+                if (args.Length == 2 && string.Equals(args[1], "stay", StringComparison.InvariantCultureIgnoreCase))
+                    Console.ReadLine();
             }
             else
             {

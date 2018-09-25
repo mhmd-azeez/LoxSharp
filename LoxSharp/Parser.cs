@@ -8,6 +8,7 @@ namespace LoxSharp
     {
         private readonly List<Token> _tokens;
         private int _current = 0;
+        private int _loopDepth = 0;
 
         public Parser(List<Token> tokens)
         {
@@ -63,6 +64,9 @@ namespace LoxSharp
 
         private Stmt Statement()
         {
+            if (Match(TokenType.Break))
+                return BreakStatement();
+
             if (Match(TokenType.For))
                 return ForStatement();
 
@@ -81,53 +85,86 @@ namespace LoxSharp
             return ExpressionStatement();
         }
 
+        private Stmt BreakStatement()
+        {
+            if (_loopDepth == 0)
+            {
+                Error(Previous(), "Must be inside a loop to use 'break'.");
+            }
+
+            Consume(TokenType.Semicolon, "Expect ';' after 'break'.");
+
+            return new Stmt.Break();
+        }
+
         private Stmt ForStatement()
         {
-            Consume(TokenType.LeftParenthesis, "Expect '(' after 'for'.");
-
-            Stmt initializer;
-            if (Match(TokenType.Semicolon))
-                initializer = null;
-            else if (Match(TokenType.Var))
-                initializer = VarDeclaration();
-            else
-                initializer = ExpressionStatement();
-
-            Expr condition = null;
-            if (!Match(TokenType.Semicolon))
-                condition = Expression();
-            Consume(TokenType.Semicolon, "Expect ';' after loop condition.");
-
-            Expr increment = null;
-            if (!Match(TokenType.Semicolon))
-                increment = Expression();
-            Consume(TokenType.RightParenthesis, "Expect ')' after for clauses");
-
-            var body = Statement();
-
-            if (increment != null)
+            // TODO: for loop: condition can't be nothing
+            try
             {
-                body = new Stmt.Block(body, new Stmt.Expression(increment));
+                _loopDepth++;
+
+                Consume(TokenType.LeftParenthesis, "Expect '(' after 'for'.");
+
+                Stmt initializer;
+                if (Match(TokenType.Semicolon))
+                    initializer = null;
+                else if (Match(TokenType.Var))
+                    initializer = VarDeclaration();
+                else
+                    initializer = ExpressionStatement();
+
+                Expr condition = null;
+                if (!Match(TokenType.Semicolon))
+                {
+                    condition = Expression();
+                    Consume(TokenType.Semicolon, "Expect ';' after loop condition.");
+                }
+
+                Expr increment = null;
+                if (!Match(TokenType.Semicolon))
+                    increment = Expression();
+                Consume(TokenType.RightParenthesis, "Expect ')' after for clauses");
+
+                var body = Statement();
+
+                if (increment != null)
+                {
+                    body = new Stmt.Block(new List<Stmt> { body, new Stmt.Expression(increment) });
+                }
+
+                body = new Stmt.While(condition ?? new Expr.Literal(true), body);
+
+                if (initializer != null)
+                {
+                    body = new Stmt.Block(new List<Stmt> { initializer, body });
+                }
+
+                return body;
             }
-
-            body = new Stmt.While(condition ?? new Expr.Literal(true), body);
-
-            if (initializer != null)
+            finally
             {
-                body = new Stmt.Block(initializer, body);
+                _loopDepth--;
             }
-
-            return body;
         }
 
         private Stmt WhileStatement()
         {
-            Consume(TokenType.LeftParenthesis, "Expect '(' after 'while'.");
-            Expr condition = Expression();
-            Consume(TokenType.RightParenthesis, "Expect ')' after condition.");
-            Stmt body = Statement();
+            try
+            {
+                _loopDepth++;
 
-            return new Stmt.While(condition, body);
+                Consume(TokenType.LeftParenthesis, "Expect '(' after 'while'.");
+                Expr condition = Expression();
+                Consume(TokenType.RightParenthesis, "Expect ')' after condition.");
+                Stmt body = Statement();
+
+                return new Stmt.While(condition, body);
+            }
+            finally
+            {
+                _loopDepth--;
+            }
         }
 
         private Stmt IfStatement()

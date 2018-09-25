@@ -8,11 +8,6 @@ namespace LoxSharp
 
         public class Block : Stmt
         {
-            public Block(params Stmt[] @statements)
-            {
-                Statements = @statements;
-            }
-
             public Block(IEnumerable<Stmt> @statements)
             {
                 Statements = @statements;
@@ -23,6 +18,19 @@ namespace LoxSharp
             public override T Accept<T>(IStmtVisitor<T> visitor)
             {
                 return visitor.VisitBlockStmt(this);
+            }
+        }
+
+        public class Break : Stmt
+        {
+            public Break()
+            {
+            }
+
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitBreakStmt(this);
             }
         }
 
@@ -114,6 +122,7 @@ namespace LoxSharp
     public interface IStmtVisitor<T>
     {
         T VisitBlockStmt(Stmt.Block stmt);
+        T VisitBreakStmt(Stmt.Break stmt);
         T VisitExpressionStmt(Stmt.Expression stmt);
         T VisitIfStmt(Stmt.If stmt);
         T VisitPrintStmt(Stmt.Print stmt);

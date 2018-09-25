@@ -32,6 +32,7 @@ namespace LoxSharp.Tool
             DefineAst(outputDir, "Stmt", new List<string>
             {
                 "Block          : IEnumerable<Stmt> Statements",
+                "Break          : ",
                 "Expression     : Expr Expr",
                 "If             : Expr Condition, Stmt ThenBranch, Stmt ElseBranch",
                 "Print          : Expr Expr",
@@ -96,7 +97,7 @@ namespace LoxSharp.Tool
             writer.WriteLine($"        public class {className} : {baseName}");
             writer.WriteLine("        {");
 
-            var fields = fieldList.Split(", ");
+            var fields = fieldList.Split(", ", StringSplitOptions.RemoveEmptyEntries);
 
             var parameters = fields.Select(f =>
             {

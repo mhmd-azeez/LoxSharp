@@ -57,6 +57,7 @@ namespace LoxSharp
         Super,
         This,
         Var,
+        Break,
 
         EOF
     }

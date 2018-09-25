@@ -30,6 +30,7 @@ namespace LoxSharp
             { "this",   TokenType.This },
             { "super",  TokenType.Super },
             { "var",    TokenType.Var },
+            { "break",  TokenType.Break },
         };
 
         public Scanner(string source)

@@ -8,8 +8,15 @@ namespace LoxSharp
 {
     public class Interpreter : IExprVisitor<object>, IStmtVisitor<object>
     {
+        public enum ExecuteResult
+        {
+            Continue,
+            Break,
+        }
+
         private static object _undefined = new object();
         private Environment _environment = new Environment();
+        private readonly object _breakInterrupt = new object();
 
         public void Interpret(List<Stmt> statements)
         {
@@ -26,9 +33,9 @@ namespace LoxSharp
             }
         }
 
-        private void Execute(Stmt stmt)
+        private ExecuteResult Execute(Stmt stmt)
         {
-            stmt.Accept(this);
+            return stmt.Accept(this) == _breakInterrupt ? ExecuteResult.Break : ExecuteResult.Continue;
         }
 
         private string Stringify(object value)
@@ -232,12 +239,12 @@ namespace LoxSharp
 
         public object VisitBlockStmt(Stmt.Block stmt)
         {
-            ExecuteBlock(stmt.Statements, new Environment(_environment));
+            var result = ExecuteBlock(stmt.Statements, new Environment(_environment));
 
-            return null;
+            return result == ExecuteResult.Break ? _breakInterrupt : null;
         }
 
-        private void ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
+        private ExecuteResult ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
         {
             var previous = _environment;
 
@@ -247,13 +254,16 @@ namespace LoxSharp
 
                 foreach (var statement in statements)
                 {
-                    Execute(statement);
+                    if (Execute(statement) == ExecuteResult.Break)
+                        return ExecuteResult.Break;
                 }
             }
             finally
             {
                 _environment = previous;
             }
+
+            return ExecuteResult.Continue;
         }
 
         public object VisitIfStmt(Stmt.If stmt)
@@ -262,11 +272,13 @@ namespace LoxSharp
 
             if (IsTruthy(condition))
             {
-                Execute(stmt.ThenBranch);
+                if (Execute(stmt.ThenBranch) == ExecuteResult.Break)
+                    return _breakInterrupt;
             }
             else if (stmt.ElseBranch != null)
             {
-                Execute(stmt.ElseBranch);
+                if (Execute(stmt.ElseBranch) == ExecuteResult.Break)
+                    return _breakInterrupt;
             }
 
             return null;
@@ -293,12 +305,18 @@ namespace LoxSharp
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            while(IsTruthy(Evaluate(stmt.Condition)))
+            while (IsTruthy(Evaluate(stmt.Condition)))
             {
-                Execute(stmt.Body);
+                if (Execute(stmt.Body) == ExecuteResult.Break)
+                    break;
             }
 
             return null;
+        }
+
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            return _breakInterrupt;
         }
     }
 }
