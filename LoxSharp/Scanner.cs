@@ -66,6 +66,7 @@ namespace LoxSharp
                 case '+': AddToken(TokenType.Plus); break;
                 case '*': AddToken(TokenType.Star); break;
                 case ';': AddToken(TokenType.Semicolon); break;
+                case '%': AddToken(TokenType.Percent); break;
 
                 case '!': AddToken(Match('=') ? TokenType.BangEqual : TokenType.Bang); break;
                 case '>': AddToken(Match('=') ? TokenType.GreaterEqual : TokenType.Greater); break;

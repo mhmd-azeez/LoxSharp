@@ -311,7 +311,7 @@ namespace LoxSharp
         {
             var expr = Unary();
 
-            while (Match(TokenType.Slash, TokenType.Star))
+            while (Match(TokenType.Slash, TokenType.Star, TokenType.Percent))
             {
                 var operater = Previous();
                 var right = Unary();

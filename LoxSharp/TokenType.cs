@@ -17,6 +17,7 @@ namespace LoxSharp
         Minus,
         Slash,
         Star,
+        Percent,
 
         Dot,
         Comma,

@@ -95,7 +95,16 @@ namespace LoxSharp
 
                 case TokenType.Star:
                     CheckNumberOperands(expr.Operator, left, right);
+
                     return (double)left * (double)right;
+
+                case TokenType.Percent:
+                    CheckNumberOperands(expr.Operator, left, right);
+
+                    denominator = (double)right;
+                    CheckDevideByZero(expr.Operator, denominator);
+
+                    return (double)left % denominator;
 
                 case TokenType.EqualEqual:
                     return IsEqual(left, right);
