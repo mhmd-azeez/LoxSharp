@@ -21,7 +21,7 @@ namespace LoxSharp
             {
                 while (!IsAtEnd())
                 {
-                    list.Add(Statement());
+                    list.Add(Declaration());
                 }
             }
             catch (ParseException)
@@ -30,6 +30,35 @@ namespace LoxSharp
             }
 
             return list;
+        }
+
+        private Stmt Declaration()
+        {
+            try
+            {
+                if (Match(TokenType.Var))
+                    return VarDeclaration();
+
+                return Statement();
+            }
+            catch (ParseException)
+            {
+                Synchronize();
+                return null;
+            }
+        }
+
+        private Stmt VarDeclaration()
+        {
+            var name = Consume(TokenType.Identifier, "Expect variable name.");
+
+            Expr initializer = null;
+            if (Match(TokenType.Equal))
+                initializer = Expression();
+
+            Consume(TokenType.Semicolon, "Expect ';' after variable declaration.");
+
+            return new Var(name, initializer);
         }
 
         private Stmt Statement()
@@ -138,6 +167,9 @@ namespace LoxSharp
 
             if (Match(TokenType.String, TokenType.Number))
                 return new Literal(Previous().Literal);
+
+            if (Match(TokenType.Identifier))
+                return new Variable(Previous());
 
             if (Match(TokenType.LeftParenthesis))
             {

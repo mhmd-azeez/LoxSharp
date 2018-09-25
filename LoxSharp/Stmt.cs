@@ -35,9 +35,27 @@ namespace LoxSharp
         }
     }
 
+    public class Var : Stmt
+    {
+        public Var(Token @name, Expr @intializer)
+        {
+            Name = @name;
+            Intializer = @intializer;
+        }
+
+        public Token Name { get; }
+        public Expr Intializer { get; }
+
+        public override T Accept<T>(IStmtVisitor<T> visitor)
+        {
+            return visitor.VisitVarStmt(this);
+        }
+    }
+
     public interface IStmtVisitor<T>
     {
         T VisitExpressionStmt(Expression stmt);
         T VisitPrintStmt(Print stmt);
+        T VisitVarStmt(Var stmt);
     }
 }

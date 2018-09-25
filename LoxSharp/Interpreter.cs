@@ -36,7 +36,7 @@ namespace LoxSharp
             {
                 var text = value.ToString();
 
-                // if the number was an inteter, print it without a decimal point
+                // if the number was an integer, print it without a decimal point
                 if (text.EndsWith(".0"))
                 {
                     text = text.Substring(0, text.Length - 2);

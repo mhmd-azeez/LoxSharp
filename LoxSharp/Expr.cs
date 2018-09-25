@@ -71,11 +71,27 @@ namespace LoxSharp
         }
     }
 
+    public class Variable : Expr
+    {
+        public Variable(Token @name)
+        {
+            name = @name;
+        }
+
+        public Token name { get; }
+
+        public override T Accept<T>(IExprVisitor<T> visitor)
+        {
+            return visitor.VisitVariableExpr(this);
+        }
+    }
+
     public interface IExprVisitor<T>
     {
         T VisitBinaryExpr(Binary expr);
         T VisitUnaryExpr(Unary expr);
         T VisitLiteralExpr(Literal expr);
         T VisitGroupingExpr(Grouping expr);
+        T VisitVariableExpr(Variable expr);
     }
 }

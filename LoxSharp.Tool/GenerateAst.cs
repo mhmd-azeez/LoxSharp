@@ -24,12 +24,14 @@ namespace LoxSharp.Tool
                 "Unary     : Token Operator, Expr Right",
                 "Literal   : object Value",
                 "Grouping  : Expr Expression",
+                "Variable  : Token Name",
             });
 
             DefineAst(outputDir, "Stmt", new List<string>
             {
                 "Expression    : Expr Expr",
                 "Print  : Expr Expr",
+                "Var    : Token Name, Expr Intializer",
             });
         }
 
