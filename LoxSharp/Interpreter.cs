@@ -363,7 +363,7 @@ namespace LoxSharp
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new Function(stmt);
+            var function = new Function(stmt, _environment);
             _environment.Define(stmt.Name.Lexeme, function);
 
             return null;
