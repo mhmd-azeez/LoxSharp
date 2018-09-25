@@ -151,7 +151,7 @@ namespace LoxSharp
 
         private Token Consume(TokenType token, string message)
         {
-            if (Match(token)) return Advance();
+            if (Match(token)) return Previous();
 
             throw Error(Peek(), message);
         }
