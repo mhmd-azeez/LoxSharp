@@ -327,5 +327,25 @@ namespace LoxSharp
         {
             return _breakInterrupt;
         }
+
+        public object VisitCallExpr(Expr.Call expr)
+        {
+            var callee = Evaluate(expr.Callee);
+
+            if (callee is ICallable function)
+            {
+                var arguments = expr.Arguments.Select(Evaluate).ToArray();
+
+                if (arguments.Length != function.Arity)
+                {
+                    throw new RuntimeException(expr.Parenthesis,
+                       $"Expected {function.Arity} arguments but got {arguments.Length}.");
+                }
+
+                return function.Call(this, arguments);
+            }
+
+            throw new RuntimeException(expr.Parenthesis, "Can only call functions and classes.");
+        }
     }
 }

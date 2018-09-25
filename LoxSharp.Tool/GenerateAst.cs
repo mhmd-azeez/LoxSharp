@@ -26,6 +26,7 @@ namespace LoxSharp.Tool
                 "Literal   : object Value",
                 "Logical   : Expr Left, Token Operator, Expr Right",
                 "Grouping  : Expr Expression",
+                "Call      : Expr Callee, Token Parenthesis, IEnumerable<Expr> Arguments",
                 "Variable  : Token Name",
             });
 

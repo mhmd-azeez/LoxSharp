@@ -331,7 +331,43 @@ namespace LoxSharp
                 return new Expr.Unary(operater, right);
             }
 
-            return Primary();
+            return Call();
+        }
+
+        private Expr FinishCall(Expr callee)
+        {
+            var arguments = new List<Expr>();
+
+            if (!Check(TokenType.RightParenthesis))
+            {
+                do
+                {
+                    if (arguments.Count >= 8)
+                    {
+                        Error(Peek(), "Cannot have more than 8 arguments.");
+                    }
+
+                    arguments.Add(Expression());
+                } while (Match(TokenType.Comma));
+            }
+
+            var parenthesis = Consume(TokenType.RightParenthesis, "Expect ')' after arguments.");
+            return new Expr.Call(callee, parenthesis, arguments);
+        }
+
+        private Expr Call()
+        {
+            var expr = Primary();
+
+            while (true)
+            {
+                if (Match(TokenType.LeftParenthesis))
+                    expr = FinishCall(expr);
+                else
+                    break;
+            }
+
+            return expr;
         }
 
         private Expr Primary()

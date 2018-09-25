@@ -21,6 +21,11 @@ namespace LoxSharp
             return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
         }
 
+        public string VisitCallExpr(Expr.Call expr)
+        {
+            return $"call";
+        }
+
         public string VisitGroupingExpr(Expr.Grouping expr)
         {
             return Parenthesize("group", expr.Expression);

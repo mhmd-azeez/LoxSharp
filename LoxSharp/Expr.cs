@@ -108,6 +108,25 @@ namespace LoxSharp
             }
         }
 
+        public class Call : Expr
+        {
+            public Call(Expr @callee, Token @parenthesis, IEnumerable<Expr> @arguments)
+            {
+                Callee = @callee;
+                Parenthesis = @parenthesis;
+                Arguments = @arguments;
+            }
+
+            public Expr Callee { get; }
+            public Token Parenthesis { get; }
+            public IEnumerable<Expr> Arguments { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitCallExpr(this);
+            }
+        }
+
         public class Variable : Expr
         {
             public Variable(Token @name)
@@ -133,6 +152,7 @@ namespace LoxSharp
         T VisitLiteralExpr(Expr.Literal expr);
         T VisitLogicalExpr(Expr.Logical expr);
         T VisitGroupingExpr(Expr.Grouping expr);
+        T VisitCallExpr(Expr.Call expr);
         T VisitVariableExpr(Expr.Variable expr);
     }
 }
