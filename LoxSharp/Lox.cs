@@ -38,14 +38,14 @@ namespace LoxSharp
             Run(code);
 
             if (_hadError)
-                Environment.Exit(65);
+                System.Environment.Exit(65);
             if (_hadRuntimeError)
-                Environment.Exit(70);
+                System.Environment.Exit(70);
         }
 
         static void RunPrompt()
         {
-            while(true)
+            while (true)
             {
                 Console.Write("> ");
 

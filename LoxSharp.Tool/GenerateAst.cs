@@ -31,7 +31,7 @@ namespace LoxSharp.Tool
             {
                 "Expression    : Expr Expr",
                 "Print  : Expr Expr",
-                "Var    : Token Name, Expr Intializer",
+                "Var    : Token Name, Expr Initializer",
             });
         }
 

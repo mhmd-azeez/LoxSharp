@@ -8,6 +8,8 @@ namespace LoxSharp
 {
     public class Interpreter : IExprVisitor<object>, IStmtVisitor<object>
     {
+        private readonly Environment _environment = new Environment();
+
         public void Interpret(List<Stmt> statements)
         {
             try
@@ -200,12 +202,19 @@ namespace LoxSharp
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            throw new NotImplementedException();
+            return _environment.Get(expr.Name);
         }
 
         public object VisitVarStmt(Stmt.Var stmt)
         {
-            throw new NotImplementedException();
+            object value = null;
+
+            if (stmt.Initializer != null)
+                value = Evaluate(stmt.Initializer);
+
+            _environment.Define(stmt.Name.Lexeme, value);
+
+            return null;
         }
     }
 }
