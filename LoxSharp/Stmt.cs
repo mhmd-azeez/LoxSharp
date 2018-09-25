@@ -8,6 +8,11 @@ namespace LoxSharp
 
         public class Block : Stmt
         {
+            public Block(params Stmt[] @statements)
+            {
+                Statements = @statements;
+            }
+
             public Block(IEnumerable<Stmt> @statements)
             {
                 Statements = @statements;

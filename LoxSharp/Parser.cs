@@ -63,6 +63,9 @@ namespace LoxSharp
 
         private Stmt Statement()
         {
+            if (Match(TokenType.For))
+                return ForStatement();
+
             if (Match(TokenType.If))
                 return IfStatement();
 
@@ -76,6 +79,45 @@ namespace LoxSharp
                 return new Stmt.Block(Block());
 
             return ExpressionStatement();
+        }
+
+        private Stmt ForStatement()
+        {
+            Consume(TokenType.LeftParenthesis, "Expect '(' after 'for'.");
+
+            Stmt initializer;
+            if (Match(TokenType.Semicolon))
+                initializer = null;
+            else if (Match(TokenType.Var))
+                initializer = VarDeclaration();
+            else
+                initializer = ExpressionStatement();
+
+            Expr condition = null;
+            if (!Match(TokenType.Semicolon))
+                condition = Expression();
+            Consume(TokenType.Semicolon, "Expect ';' after loop condition.");
+
+            Expr increment = null;
+            if (!Match(TokenType.Semicolon))
+                increment = Expression();
+            Consume(TokenType.RightParenthesis, "Expect ')' after for clauses");
+
+            var body = Statement();
+
+            if (increment != null)
+            {
+                body = new Stmt.Block(body, new Stmt.Expression(increment));
+            }
+
+            body = new Stmt.While(condition ?? new Expr.Literal(true), body);
+
+            if (initializer != null)
+            {
+                body = new Stmt.Block(initializer, body);
+            }
+
+            return body;
         }
 
         private Stmt WhileStatement()
@@ -162,7 +204,7 @@ namespace LoxSharp
         {
             var expr = And();
 
-            while(Match(TokenType.Or))
+            while (Match(TokenType.Or))
             {
                 var op = Previous();
                 var right = And();
@@ -176,7 +218,7 @@ namespace LoxSharp
         {
             var expr = Equality();
 
-            while(Match(TokenType.And))
+            while (Match(TokenType.And))
             {
                 var op = Previous();
                 var right = Equality();
