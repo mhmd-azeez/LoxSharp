@@ -66,7 +66,23 @@ namespace LoxSharp
             if (Match(TokenType.Print))
                 return PrintStatement();
 
+            if (Match(TokenType.LeftBrace))
+                return new Stmt.Block(Block());
+
             return ExpressionStatement();
+        }
+
+        private IEnumerable<Stmt> Block()
+        {
+            var statements = new List<Stmt>();
+
+            while(!Check(TokenType.RightBrace) && !IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+
+            Consume(TokenType.RightBrace, "Expect '}' after block.");
+            return statements;
         }
 
         private Stmt ExpressionStatement()

@@ -1,8 +1,25 @@
+using System.Collections.Generic;
+
 namespace LoxSharp
 {
     public abstract class Stmt
     {
         public abstract T Accept<T>(IStmtVisitor<T> visitor);
+
+        public class Block : Stmt
+        {
+            public Block(IEnumerable<Stmt> @statements)
+            {
+                Statements = @statements;
+            }
+
+            public IEnumerable<Stmt> Statements { get; }
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitBlockStmt(this);
+            }
+        }
 
         public class Expression : Stmt
         {
@@ -55,6 +72,7 @@ namespace LoxSharp
 
     public interface IStmtVisitor<T>
     {
+        T VisitBlockStmt(Stmt.Block stmt);
         T VisitExpressionStmt(Stmt.Expression stmt);
         T VisitPrintStmt(Stmt.Print stmt);
         T VisitVarStmt(Stmt.Var stmt);

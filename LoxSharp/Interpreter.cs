@@ -8,7 +8,7 @@ namespace LoxSharp
 {
     public class Interpreter : IExprVisitor<object>, IStmtVisitor<object>
     {
-        private readonly Environment _environment = new Environment();
+        private Environment _environment = new Environment();
 
         public void Interpret(List<Stmt> statements)
         {
@@ -223,6 +223,32 @@ namespace LoxSharp
 
             _environment.Assign(expr.Name, value);
             return value;
+        }
+
+        public object VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.Statements, new Environment(_environment));
+
+            return null;
+        }
+
+        private void ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
+        {
+            var previous = _environment;
+
+            try
+            {
+                _environment = environment;
+
+                foreach(var statement in statements)
+                {
+                    Execute(statement);
+                }
+            }
+            finally
+            {
+                _environment = previous;
+            }
         }
     }
 }

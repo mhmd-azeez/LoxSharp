@@ -30,9 +30,10 @@ namespace LoxSharp.Tool
 
             DefineAst(outputDir, "Stmt", new List<string>
             {
-                "Expression    : Expr Expr",
-                "Print  : Expr Expr",
-                "Var    : Token Name, Expr Initializer",
+                "Block          : IEnumerable<Stmt> Statements",
+                "Expression     : Expr Expr",
+                "Print          : Expr Expr",
+                "Var            : Token Name, Expr Initializer",
             });
         }
 
@@ -42,6 +43,9 @@ namespace LoxSharp.Tool
 
             using (var writer = File.CreateText(path))
             {
+                writer.WriteLine("using System.Collections.Generic;");
+                writer.WriteLine();
+
                 writer.WriteLine("namespace LoxSharp");
                 writer.WriteLine("{");
 
