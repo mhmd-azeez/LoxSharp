@@ -47,7 +47,6 @@ namespace LoxSharp.Tool
                 writer.WriteLine($"    public abstract class {baseName}");
                 writer.WriteLine("    {");
                 writer.WriteLine($"        public abstract T Accept<T>(I{baseName}Visitor<T> visitor);");
-                writer.WriteLine("    }");
 
                 foreach (var child in children)
                 {
@@ -61,8 +60,8 @@ namespace LoxSharp.Tool
                 }
 
                 writer.WriteLine();
+                writer.WriteLine("    }");
                 DefineVisitor(writer, baseName, children);
-
                 writer.WriteLine("}");
             }
 
@@ -70,6 +69,7 @@ namespace LoxSharp.Tool
 
         private static void DefineVisitor(StreamWriter writer, string baseName, List<string> children)
         {
+            writer.WriteLine();
             writer.WriteLine($"    public interface I{baseName}Visitor<T>");
             writer.WriteLine("    {");
 
@@ -77,7 +77,7 @@ namespace LoxSharp.Tool
             {
                 var name = child.Split(":")[0].Trim();
 
-                writer.WriteLine($"        T Visit{name}{baseName}({name} {baseName.ToLower()});");
+                writer.WriteLine($"        T Visit{name}{baseName}({baseName}.{name} {baseName.ToLower()});");
             }
 
             writer.WriteLine("    }");
@@ -85,8 +85,8 @@ namespace LoxSharp.Tool
 
         private static void DefineClass(StreamWriter writer, string baseName, string className, string fieldList)
         {
-            writer.WriteLine($"    public class {className} : {baseName}");
-            writer.WriteLine("    {");
+            writer.WriteLine($"        public class {className} : {baseName}");
+            writer.WriteLine("        {");
 
             var fields = fieldList.Split(", ");
 
@@ -96,32 +96,32 @@ namespace LoxSharp.Tool
                 return $"{parts[0]} @{parts[1].ToLower()}";
             }).ToArray();
 
-            writer.WriteLine($"        public {className}({string.Join(", ", parameters)})");
-            writer.WriteLine("        {");
+            writer.WriteLine($"            public {className}({string.Join(", ", parameters)})");
+            writer.WriteLine("            {");
 
             foreach (var field in fields)
             {
                 var name = field.Split(" ")[1];
-                writer.WriteLine($"            {name} = @{name.ToLower()};");
+                writer.WriteLine($"                {name} = @{name.ToLower()};");
             }
 
-            writer.WriteLine("        }");
+            writer.WriteLine("            }");
 
             writer.WriteLine();
 
             foreach (var field in fields)
             {
-                writer.WriteLine($"        public {field} {{ get; }}");
+                writer.WriteLine($"            public {field} {{ get; }}");
             }
 
             writer.WriteLine();
 
-            writer.WriteLine($"        public override T Accept<T>(I{baseName}Visitor<T> visitor)");
-            writer.WriteLine("        {");
-            writer.WriteLine($"            return visitor.Visit{className}{baseName}(this);");
-            writer.WriteLine("        }");
+            writer.WriteLine($"            public override T Accept<T>(I{baseName}Visitor<T> visitor)");
+            writer.WriteLine("            {");
+            writer.WriteLine($"                return visitor.Visit{className}{baseName}(this);");
+            writer.WriteLine("            }");
 
-            writer.WriteLine("    }");
+            writer.WriteLine("        }");
         }
     }
 }

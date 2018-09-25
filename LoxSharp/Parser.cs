@@ -58,7 +58,7 @@ namespace LoxSharp
 
             Consume(TokenType.Semicolon, "Expect ';' after variable declaration.");
 
-            return new Var(name, initializer);
+            return new Stmt.Var(name, initializer);
         }
 
         private Stmt Statement()
@@ -73,14 +73,14 @@ namespace LoxSharp
         {
             var value = Expression();
             Consume(TokenType.Semicolon, "Expected ';' after value.");
-            return new Expression(value);
+            return new Stmt.Expression(value);
         }
 
         private Stmt PrintStatement()
         {
             var value = Expression();
             Consume(TokenType.Semicolon, "Expected ';' after value.");
-            return new Print(value);
+            return new Stmt.Print(value);
         }
 
         private Expr Expression()
@@ -96,7 +96,7 @@ namespace LoxSharp
             {
                 var operater = Previous();
                 var right = Comparison();
-                expr = new Binary(expr, operater, right);
+                expr = new Expr.Binary(expr, operater, right);
             }
 
             return expr;
@@ -110,7 +110,7 @@ namespace LoxSharp
             {
                 var operater = Previous();
                 var right = Addition();
-                expr = new Binary(expr, operater, right);
+                expr = new Expr.Binary(expr, operater, right);
             }
 
             return expr;
@@ -124,7 +124,7 @@ namespace LoxSharp
             {
                 var operater = Previous();
                 var right = Multiplication();
-                expr = new Binary(expr, operater, right);
+                expr = new Expr.Binary(expr, operater, right);
             }
 
             return expr;
@@ -138,7 +138,7 @@ namespace LoxSharp
             {
                 var operater = Previous();
                 var right = Unary();
-                expr = new Binary(expr, operater, right);
+                expr = new Expr.Binary(expr, operater, right);
             }
 
             return expr;
@@ -151,7 +151,7 @@ namespace LoxSharp
                 var operater = Previous();
                 var right = Unary();
 
-                return new Unary(operater, right);
+                return new Expr.Unary(operater, right);
             }
 
             return Primary();
@@ -160,22 +160,22 @@ namespace LoxSharp
         private Expr Primary()
         {
             if (Match(TokenType.False))
-                return new Literal(false);
+                return new Expr.Literal(false);
 
             if (Match(TokenType.True))
-                return new Literal(true);
+                return new Expr.Literal(true);
 
             if (Match(TokenType.String, TokenType.Number))
-                return new Literal(Previous().Literal);
+                return new Expr.Literal(Previous().Literal);
 
             if (Match(TokenType.Identifier))
-                return new Variable(Previous());
+                return new Expr.Variable(Previous());
 
             if (Match(TokenType.LeftParenthesis))
             {
                 var expr = Expression();
                 Consume(TokenType.RightParenthesis, "Expcted ')' after expression");
-                return new Grouping(expr);
+                return new Expr.Grouping(expr);
             }
 
             throw Error(Peek(), "Expected expression.");

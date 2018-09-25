@@ -48,7 +48,7 @@ namespace LoxSharp
             return value.ToString();
         }
 
-        public object VisitBinaryExpr(Binary expr)
+        public object VisitBinaryExpr(Expr.Binary expr)
         {
             var left = Evaluate(expr.Left);
             var right = Evaluate(expr.Right);
@@ -138,17 +138,17 @@ namespace LoxSharp
             return left.Equals(right);
         }
 
-        public object VisitGroupingExpr(Grouping expr)
+        public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
         }
 
-        public object VisitLiteralExpr(Literal expr)
+        public object VisitLiteralExpr(Expr.Literal expr)
         {
             return expr.Value;
         }
 
-        public object VisitUnaryExpr(Unary expr)
+        public object VisitUnaryExpr(Expr.Unary expr)
         {
             var right = Evaluate(expr.Right);
 
@@ -185,17 +185,27 @@ namespace LoxSharp
             return expression.Accept(this);
         }
 
-        public object VisitExpressionStmt(Expression stmt)
+        public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.Expr);
             return null;
         }
 
-        public object VisitPrintStmt(Print stmt)
+        public object VisitPrintStmt(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.Expr);
             Console.WriteLine(Stringify(value));
             return null;
+        }
+
+        public object VisitVariableExpr(Expr.Variable expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object VisitVarStmt(Stmt.Var stmt)
+        {
+            throw new NotImplementedException();
         }
     }
 }

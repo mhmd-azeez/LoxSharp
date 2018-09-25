@@ -3,95 +3,96 @@ namespace LoxSharp
     public abstract class Expr
     {
         public abstract T Accept<T>(IExprVisitor<T> visitor);
-    }
 
-    public class Binary : Expr
-    {
-        public Binary(Expr @left, Token @operator, Expr @right)
+        public class Binary : Expr
         {
-            Left = @left;
-            Operator = @operator;
-            Right = @right;
+            public Binary(Expr @left, Token @operator, Expr @right)
+            {
+                Left = @left;
+                Operator = @operator;
+                Right = @right;
+            }
+
+            public Expr Left { get; }
+            public Token Operator { get; }
+            public Expr Right { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitBinaryExpr(this);
+            }
         }
 
-        public Expr Left { get; }
-        public Token Operator { get; }
-        public Expr Right { get; }
-
-        public override T Accept<T>(IExprVisitor<T> visitor)
+        public class Unary : Expr
         {
-            return visitor.VisitBinaryExpr(this);
-        }
-    }
+            public Unary(Token @operator, Expr @right)
+            {
+                Operator = @operator;
+                Right = @right;
+            }
 
-    public class Unary : Expr
-    {
-        public Unary(Token @operator, Expr @right)
-        {
-            Operator = @operator;
-            Right = @right;
-        }
+            public Token Operator { get; }
+            public Expr Right { get; }
 
-        public Token Operator { get; }
-        public Expr Right { get; }
-
-        public override T Accept<T>(IExprVisitor<T> visitor)
-        {
-            return visitor.VisitUnaryExpr(this);
-        }
-    }
-
-    public class Literal : Expr
-    {
-        public Literal(object @value)
-        {
-            Value = @value;
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitUnaryExpr(this);
+            }
         }
 
-        public object Value { get; }
-
-        public override T Accept<T>(IExprVisitor<T> visitor)
+        public class Literal : Expr
         {
-            return visitor.VisitLiteralExpr(this);
-        }
-    }
+            public Literal(object @value)
+            {
+                Value = @value;
+            }
 
-    public class Grouping : Expr
-    {
-        public Grouping(Expr @expression)
-        {
-            Expression = @expression;
-        }
+            public object Value { get; }
 
-        public Expr Expression { get; }
-
-        public override T Accept<T>(IExprVisitor<T> visitor)
-        {
-            return visitor.VisitGroupingExpr(this);
-        }
-    }
-
-    public class Variable : Expr
-    {
-        public Variable(Token @name)
-        {
-            name = @name;
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitLiteralExpr(this);
+            }
         }
 
-        public Token name { get; }
-
-        public override T Accept<T>(IExprVisitor<T> visitor)
+        public class Grouping : Expr
         {
-            return visitor.VisitVariableExpr(this);
+            public Grouping(Expr @expression)
+            {
+                Expression = @expression;
+            }
+
+            public Expr Expression { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitGroupingExpr(this);
+            }
         }
+
+        public class Variable : Expr
+        {
+            public Variable(Token @name)
+            {
+                Name = @name;
+            }
+
+            public Token Name { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitVariableExpr(this);
+            }
+        }
+
     }
 
     public interface IExprVisitor<T>
     {
-        T VisitBinaryExpr(Binary expr);
-        T VisitUnaryExpr(Unary expr);
-        T VisitLiteralExpr(Literal expr);
-        T VisitGroupingExpr(Grouping expr);
-        T VisitVariableExpr(Variable expr);
+        T VisitBinaryExpr(Expr.Binary expr);
+        T VisitUnaryExpr(Expr.Unary expr);
+        T VisitLiteralExpr(Expr.Literal expr);
+        T VisitGroupingExpr(Expr.Grouping expr);
+        T VisitVariableExpr(Expr.Variable expr);
     }
 }

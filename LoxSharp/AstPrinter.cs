@@ -11,25 +11,30 @@ namespace LoxSharp
             return expression.Accept(this);
         }
 
-        public string VisitBinaryExpr(Binary expr)
+        public string VisitBinaryExpr(Expr.Binary expr)
         {
             return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
         }
 
-        public string VisitGroupingExpr(Grouping expr)
+        public string VisitGroupingExpr(Expr.Grouping expr)
         {
             return Parenthesize("group", expr.Expression);
         }
 
-        public string VisitLiteralExpr(Literal expr)
+        public string VisitLiteralExpr(Expr.Literal expr)
         {
             if (expr.Value == null) return "nil";
             return expr.Value.ToString();
         }
 
-        public string VisitUnaryExpr(Unary expr)
+        public string VisitUnaryExpr(Expr.Unary expr)
         {
             return Parenthesize(expr.Operator.Lexeme, expr.Right);
+        }
+
+        public string VisitVariableExpr(Expr.Variable expr)
+        {
+            return expr.Name.Lexeme;
         }
 
         private string Parenthesize(string name, params Expr[] expressions)
