@@ -49,6 +49,25 @@ namespace LoxSharp
             }
         }
 
+        public class Function : Stmt
+        {
+            public Function(Token @name, IReadOnlyList<Token> @params, IReadOnlyList<Stmt> @body)
+            {
+                Name = @name;
+                Params = @params;
+                Body = @body;
+            }
+
+            public Token Name { get; }
+            public IReadOnlyList<Token> Params { get; }
+            public IReadOnlyList<Stmt> Body { get; }
+
+            public override T Accept<T>(IStmtVisitor<T> visitor)
+            {
+                return visitor.VisitFunctionStmt(this);
+            }
+        }
+
         public class If : Stmt
         {
             public If(Expr @condition, Stmt @thenbranch, Stmt @elsebranch)
@@ -124,6 +143,7 @@ namespace LoxSharp
         T VisitBlockStmt(Stmt.Block stmt);
         T VisitBreakStmt(Stmt.Break stmt);
         T VisitExpressionStmt(Stmt.Expression stmt);
+        T VisitFunctionStmt(Stmt.Function stmt);
         T VisitIfStmt(Stmt.If stmt);
         T VisitPrintStmt(Stmt.Print stmt);
         T VisitVarStmt(Stmt.Var stmt);

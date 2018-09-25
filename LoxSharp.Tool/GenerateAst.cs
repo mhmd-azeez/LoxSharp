@@ -35,6 +35,7 @@ namespace LoxSharp.Tool
                 "Block          : IEnumerable<Stmt> Statements",
                 "Break          : ",
                 "Expression     : Expr Expr",
+                "Function       : Token Name, IReadOnlyList<Token> Params, IReadOnlyList<Stmt> Body",
                 "If             : Expr Condition, Stmt ThenBranch, Stmt ElseBranch",
                 "Print          : Expr Expr",
                 "Var            : Token Name, Expr Initializer",

@@ -37,6 +37,9 @@ namespace LoxSharp
         {
             try
             {
+                if (Match(TokenType.Fun))
+                    return Function("function");
+
                 if (Match(TokenType.Var))
                     return VarDeclaration();
 
@@ -47,6 +50,31 @@ namespace LoxSharp
                 Synchronize();
                 return null;
             }
+        }
+
+        private Stmt Function(string kind)
+        {
+            var name = Consume(TokenType.Identifier, $"Expect {kind} name.");
+
+            Consume(TokenType.LeftParenthesis, $"Expect '(' after {kind} name.");
+
+            var parameters = new List<Token>();
+            if (!Check(TokenType.RightParenthesis))
+            {
+                do
+                {
+                    if (parameters.Count >= 8)
+                        Error(Peek(), "Cannot have more than 8 parameters.");
+
+                    parameters.Add(Consume(TokenType.Identifier, "Expect parameter name."));
+                } while (Match(TokenType.Comma));
+            }
+
+            Consume(TokenType.RightParenthesis, "Expect ')' after parameters.");
+            Consume(TokenType.LeftBrace, $"Expect '{{' before {kind} body.");
+
+            var body = Block();
+            return new Stmt.Function(name, parameters, body);
         }
 
         private Stmt VarDeclaration()
@@ -184,7 +212,7 @@ namespace LoxSharp
             return new Stmt.If(condition, thenBranch, elseBranch);
         }
 
-        private IEnumerable<Stmt> Block()
+        private IReadOnlyList<Stmt> Block()
         {
             var statements = new List<Stmt>();
 

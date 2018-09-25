@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoxSharp
 {
@@ -14,8 +12,23 @@ namespace LoxSharp
             Break,
         }
 
+        public Interpreter()
+        {
+            _environment = Globals = new Environment();
+
+            Globals.Define("clock",
+                new NativeFunction("clock", (_, __) => new TimeSpan(DateTime.Now.Ticks).TotalSeconds));
+            Globals.Define("print",
+                new NativeFunction("print", (_, a) =>
+                {
+                    Console.WriteLine(a.OfType<string>().FirstOrDefault());
+                    return null;
+                }, 1));
+        }
+
         private static object _undefined = new object();
-        private Environment _environment = new Environment();
+        public Environment Globals { get; private set; }
+        private Environment _environment;
         private readonly object _breakInterrupt = new object();
 
         public void Interpret(List<Stmt> statements)
@@ -253,7 +266,7 @@ namespace LoxSharp
             return result == ExecuteResult.Break ? _breakInterrupt : null;
         }
 
-        private ExecuteResult ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
+        public ExecuteResult ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
         {
             var previous = _environment;
 
@@ -346,6 +359,14 @@ namespace LoxSharp
             }
 
             throw new RuntimeException(expr.Parenthesis, "Can only call functions and classes.");
+        }
+
+        public object VisitFunctionStmt(Stmt.Function stmt)
+        {
+            var function = new Function(stmt);
+            _environment.Define(stmt.Name.Lexeme, function);
+
+            return null;
         }
     }
 }

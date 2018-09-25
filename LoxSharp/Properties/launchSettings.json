@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LoxSharp": {
+      "commandName": "Project",
+      "commandLineArgs": "main.lox"
+    }
+  }
+}
