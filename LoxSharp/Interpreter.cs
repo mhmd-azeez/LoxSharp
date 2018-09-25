@@ -8,6 +8,7 @@ namespace LoxSharp
 {
     public class Interpreter : IExprVisitor<object>, IStmtVisitor<object>
     {
+        private static object _undefined = new object();
         private Environment _environment = new Environment();
 
         public void Interpret(List<Stmt> statements)
@@ -202,12 +203,16 @@ namespace LoxSharp
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            return _environment.Get(expr.Name);
+            var value = _environment.Get(expr.Name);
+            if (value == _undefined)
+                throw new RuntimeException(expr.Name, $"Variable '{expr.Name.Lexeme}' has not been properly initialized.");
+
+            return value;
         }
 
         public object VisitVarStmt(Stmt.Var stmt)
         {
-            object value = null;
+            object value = _undefined;
 
             if (stmt.Initializer != null)
                 value = Evaluate(stmt.Initializer);

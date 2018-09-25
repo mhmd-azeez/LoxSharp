@@ -53,13 +53,13 @@ namespace LoxSharp
                 if (!line.TrimEnd().EndsWith(";"))
                     line = line + ";";
 
-                Run(line);
+                Run(line, printExpressions: true);
 
                 _hadError = false;
             }
         }
 
-        static void Run(string source)
+        static void Run(string source, bool printExpressions = false)
         {
             Scanner scanner = new Scanner(source);
             var tokens = scanner.ScanTokens();
@@ -69,6 +69,11 @@ namespace LoxSharp
 
             // Stop if there was a syntax error.
             if (_hadError) return;
+
+            if (printExpressions && statements.Count == 1 && statements[0] is Stmt.Expression exprStmt)
+            {
+                statements[0] = new Stmt.Print(exprStmt.Expr);
+            }
 
             _interpreter.Interpret(statements);
         }
