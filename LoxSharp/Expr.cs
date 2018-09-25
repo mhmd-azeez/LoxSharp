@@ -4,6 +4,23 @@ namespace LoxSharp
     {
         public abstract T Accept<T>(IExprVisitor<T> visitor);
 
+        public class Assign : Expr
+        {
+            public Assign(Token @name, Expr @value)
+            {
+                Name = @name;
+                Value = @value;
+            }
+
+            public Token Name { get; }
+            public Expr Value { get; }
+
+            public override T Accept<T>(IExprVisitor<T> visitor)
+            {
+                return visitor.VisitAssignExpr(this);
+            }
+        }
+
         public class Binary : Expr
         {
             public Binary(Expr @left, Token @operator, Expr @right)
@@ -89,6 +106,7 @@ namespace LoxSharp
 
     public interface IExprVisitor<T>
     {
+        T VisitAssignExpr(Expr.Assign expr);
         T VisitBinaryExpr(Expr.Binary expr);
         T VisitUnaryExpr(Expr.Unary expr);
         T VisitLiteralExpr(Expr.Literal expr);

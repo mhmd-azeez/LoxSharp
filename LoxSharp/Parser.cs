@@ -85,7 +85,28 @@ namespace LoxSharp
 
         private Expr Expression()
         {
-            return Equality();
+            return Assignment();
+        }
+
+        private Expr Assignment()
+        {
+            var expr = Equality();
+
+            if (Match(TokenType.Equal))
+            {
+                var equals = Previous();
+                var value = Assignment();
+
+                if (expr is Expr.Variable variable)
+                {
+                    var name = variable.Name;
+                    return new Expr.Assign(name, value);
+                }
+
+                Error(equals, "Invalid assignment target.");
+            }
+
+            return expr;
         }
 
         private Expr Equality()

@@ -20,6 +20,7 @@ namespace LoxSharp.Tool
 
             DefineAst(outputDir, "Expr", new List<string>
             {
+                "Assign    : Token Name, Expr Value",
                 "Binary    : Expr Left, Token Operator, Expr Right",
                 "Unary     : Token Operator, Expr Right",
                 "Literal   : object Value",

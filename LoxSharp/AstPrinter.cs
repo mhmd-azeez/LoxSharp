@@ -11,6 +11,11 @@ namespace LoxSharp
             return expression.Accept(this);
         }
 
+        public string VisitAssignExpr(Expr.Assign expr)
+        {
+            return $"{expr.Name} <= {expr.Value.Accept(this)}";
+        }
+
         public string VisitBinaryExpr(Expr.Binary expr)
         {
             return Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);

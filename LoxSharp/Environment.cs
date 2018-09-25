@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LoxSharp
 {
@@ -13,10 +14,18 @@ namespace LoxSharp
 
         public object Get(Token name)
         {
-            if (_values.ContainsKey(name.Lexeme))
-                return _values[name.Lexeme];
+            if (!_values.ContainsKey(name.Lexeme))
+                throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
 
-            throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+            return _values[name.Lexeme];
+        }
+
+        public void Assign(Token name, object value)
+        {
+            if (!_values.ContainsKey(name.Lexeme))
+                throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+
+            _values[name.Lexeme] = value;
         }
     }
 }

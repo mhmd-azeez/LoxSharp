@@ -216,5 +216,13 @@ namespace LoxSharp
 
             return null;
         }
+
+        public object VisitAssignExpr(Expr.Assign expr)
+        {
+            var value = Evaluate(expr.Value);
+
+            _environment.Assign(expr.Name, value);
+            return value;
+        }
     }
 }
