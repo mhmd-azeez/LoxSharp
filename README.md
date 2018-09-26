@@ -4,8 +4,18 @@ Lox is a little programming language created by [Bob Nystrom](https://twitter.co
 ## What's implemented
  The interprer is still a work in progress as I've not finished the book yet.
 
+## Operators
+
+| Name           | Operators | Associates |
+|----------------|-----------|------------|
+| Unary          | ! -       | Right      |
+| Multiplication | / * %     | Left       |
+| Addition       | - +       | Left       |
+| Comparison     | > >= < <= | Left       |
+| Equality       | == !=     | Left       |
+
 ## Variables
-Lox is a dynamically typed language, variables can have values of three types: `nil`, `boolean` and `string`.
+Lox is a dynamically typed language, variables can have values of four types: `nil`, `numbers` (64-bit floating point numbers), `boolean` and `string`.
 
 ```kotlin
 var x = 5;
@@ -67,4 +77,20 @@ fun doSomething() {
 }
 
 doSomething();
+```
+
+## Standard Library
+There are only two functions in the standard library:
+### Print
+pPrints the value to stdout:
+```kotlin
+print("Hello World!");
+print(42);
+print(true);
+```
+
+### Clock
+Returns the number of seconds since 0001-01-01:
+```kotlin
+print(clock());
 ```
