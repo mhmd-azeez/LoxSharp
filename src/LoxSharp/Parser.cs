@@ -428,6 +428,9 @@ namespace LoxSharp
             if (Match(TokenType.String, TokenType.Number))
                 return new Expr.Literal(Previous().Literal);
 
+            if (Match(TokenType.Nil))
+                return new Expr.Literal(Previous().Literal);
+
             if (Match(TokenType.Identifier))
                 return new Expr.Variable(Previous());
 
