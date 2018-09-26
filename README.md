@@ -3,7 +3,7 @@ Lox is a little programming language created by [Bob Nystrom](https://twitter.co
 
 ## What's implemented
  The interprer is still a work in progress as I've not finished the book yet.
- 
+
 ## Variables
 Lox is a dynamically typed language, variables can have values of three types: `nil`, `boolean` and `string`.
 
@@ -47,4 +47,24 @@ for (var i = 0; i < 10; i = i + 1)
 {
     print("i is: " + i);
 }
+```
+## Functions
+Functions can return something:
+```kotlin
+fun coolify(thing)
+{
+    return "cool " + thing;
+}
+
+print(coolify("app"));
+```
+
+Or return nothing:
+
+```kotlin
+fun doSomething() {
+    print("Doing something...");
+}
+
+doSomething();
 ```
