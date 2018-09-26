@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoxSharp", "LoxSharp\LoxSharp.csproj", "{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoxSharp.Tool", "LoxSharp.Tool\LoxSharp.Tool.csproj", "{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxSharp.Repl", "LoxSharp.Repl\LoxSharp.Repl.csproj", "{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxSharp.Demo", "LoxSharp.Demo\LoxSharp.Demo.csproj", "{2A9E0273-1AFE-41D1-98AD-0FD2495942BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A9E0273-1AFE-41D1-98AD-0FD2495942BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9E0273-1AFE-41D1-98AD-0FD2495942BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9E0273-1AFE-41D1-98AD-0FD2495942BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9E0273-1AFE-41D1-98AD-0FD2495942BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A3CFD56-7C5D-4D67-8345-527839D5A9B1}
+	EndGlobalSection
+EndGlobal
