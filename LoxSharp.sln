@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoxSharp", "LoxSharp\LoxSharp.csproj", "{79A829FE-AE5E-42EF-A7F1-9113749FC9AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxSharp.Tool", "LoxSharp.Tool\LoxSharp.Tool.csproj", "{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoxSharp.Tool", "LoxSharp.Tool\LoxSharp.Tool.csproj", "{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxSharp.Repl", "LoxSharp.Repl\LoxSharp.Repl.csproj", "{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5ECCB32-BBBE-41AC-B0CB-8B839725B416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{346215FC-02F3-4D3A-BAD1-BC3D2B3A8227}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

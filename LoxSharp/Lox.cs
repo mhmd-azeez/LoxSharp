@@ -7,8 +7,8 @@ namespace LoxSharp
     {
         static bool _hadError = false;
         static bool _hadRuntimeError = false;
-
-        static readonly Interpreter _interpreter = new Interpreter();
+        static readonly IOutput _output = new ConsoleOutput();
+        static readonly Interpreter _interpreter = new Interpreter(_output);
 
         static int Main(string[] args)
         {
@@ -33,10 +33,10 @@ namespace LoxSharp
             return exitCode;
         }
 
-        public static void RuntimeError(RuntimeException ex)
+        public static string RuntimeError(RuntimeException ex)
         {
-            Console.WriteLine($"{ex.Message}\n[line {ex.Token.Line:N0}]");
             _hadRuntimeError = true;
+            return $"{ex.Message}\n[line {ex.Token.Line:N0}]";
         }
 
         static int RunFile(string path)
@@ -70,10 +70,10 @@ namespace LoxSharp
 
         static void Run(string source, bool printExpressions = false)
         {
-            Scanner scanner = new Scanner(source);
+            Scanner scanner = new Scanner(source, _output);
             var tokens = scanner.ScanTokens();
 
-            Parser parser = new Parser(tokens);
+            Parser parser = new Parser(tokens, _output);
             var statements = parser.Parse();
 
             // Stop if there was a syntax error.
@@ -87,23 +87,23 @@ namespace LoxSharp
             _interpreter.Interpret(statements);
         }
 
-        public static void Error(int line, string message)
+        public static string Error(int line, string message)
         {
-            Report(line, "", message);
+            return Report(line, "", message);
         }
 
-        static void Report(int line, string where, string message)
+        static string Report(int line, string where, string message)
         {
-            Console.WriteLine($"[Line {line:N0}] Error{where}: {message}");
             _hadError = true;
+            return $"[Line {line:N0}] Error{where}: {message}";
         }
 
-        public static void Error(Token token, string message)
+        public static string Error(Token token, string message)
         {
             if (token.Type == TokenType.EOF)
-                Report(token.Line, " at end", message);
+                return Report(token.Line, " at end", message);
             else
-                Report(token.Line, $" at '{token.Lexeme}'", message);
+                return Report(token.Line, $" at '{token.Lexeme}'", message);
         }
     }
 }

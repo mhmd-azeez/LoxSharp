@@ -9,10 +9,12 @@ namespace LoxSharp
         private readonly List<Token> _tokens;
         private int _current = 0;
         private int _loopDepth = 0;
+        private readonly IOutput _output;
 
-        public Parser(List<Token> tokens)
+        public Parser(List<Token> tokens, IOutput output)
         {
             _tokens = tokens;
+            _output = output;
         }
 
         public List<Stmt> Parse()
@@ -448,7 +450,7 @@ namespace LoxSharp
 
         private ParseException Error(Token token, string message)
         {
-            Lox.Error(token, message);
+            _output.WriteError(Lox.Error(token, message));
 
             return new ParseException();
         }

@@ -12,7 +12,7 @@ namespace LoxSharp
             Break,
         }
 
-        public Interpreter()
+        public Interpreter(IOutput output)
         {
             _environment = Globals = new Environment();
 
@@ -21,15 +21,17 @@ namespace LoxSharp
             Globals.Define("print",
                 new NativeFunction("print", (_, a) =>
                 {
-                    Console.WriteLine(a.OfType<string>().FirstOrDefault());
+                    _output.WriteLine(a.OfType<string>().FirstOrDefault());
                     return null;
                 }, 1));
+            _output = output;
         }
 
         private static object _undefined = new object();
         public Environment Globals { get; private set; }
         private Environment _environment;
         private readonly object _breakInterrupt = new object();
+        private readonly IOutput _output;
 
         public void Interpret(List<Stmt> statements)
         {
@@ -42,13 +44,13 @@ namespace LoxSharp
             }
             catch (RuntimeException ex)
             {
-                Lox.RuntimeError(ex);
+                _output.WriteError(Lox.RuntimeError(ex));
             }
         }
 
         private ExecuteResult Execute(Stmt stmt)
         {
-            return stmt.Accept(this) == _breakInterrupt ? ExecuteResult.Break : ExecuteResult.Continue;
+            return stmt?.Accept(this) == _breakInterrupt ? ExecuteResult.Break : ExecuteResult.Continue;
         }
 
         private string Stringify(object value)
@@ -226,7 +228,7 @@ namespace LoxSharp
         public object VisitPrintStmt(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.Expr);
-            Console.WriteLine(Stringify(value));
+            _output.WriteLine(Stringify(value));
             return null;
         }
 

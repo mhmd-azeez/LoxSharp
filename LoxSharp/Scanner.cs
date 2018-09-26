@@ -4,9 +4,10 @@ using System.Text;
 
 namespace LoxSharp
 {
-    class Scanner
+    public class Scanner
     {
         readonly string _source;
+        private readonly IOutput _output;
         readonly List<Token> _tokens = new List<Token>();
         int _start = 0;
         int _current = 0;
@@ -33,9 +34,10 @@ namespace LoxSharp
             { "break",  TokenType.Break },
         };
 
-        public Scanner(string source)
+        public Scanner(string source, IOutput output)
         {
             _source = source;
+            _output = output;
         }
 
         public List<Token> ScanTokens()
@@ -111,7 +113,7 @@ namespace LoxSharp
                     }
                     else
                     {
-                        Lox.Error(_line, $"Unexpected character: {c}");
+                        _output.WriteError(Lox.Error(_line, $"Unexpected character: {c}"));
                     }
                     break;
             }
@@ -165,7 +167,7 @@ namespace LoxSharp
 
             if (IsAtEnd())
             {
-                Lox.Error(_line, "Unterminated String.");
+                _output.WriteError(Lox.Error(_line, "Unterminated String."));
                 return;
             }
 
