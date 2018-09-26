@@ -41,7 +41,7 @@ while(x < 10)
     x = x + 1;
 }
 ```
-#### For loop
+### For loop
 ```kotlin
 for (var i = 0; i < 10; i = i + 1)
 {
