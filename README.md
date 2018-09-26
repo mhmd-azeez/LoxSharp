@@ -15,13 +15,15 @@ The interprer is still a work in progress as I've not finished the book yet.
 | Equality       | == !=     | Left       |
 
 ### Variables
-Lox is a dynamically typed language, variables can have values of four types: `nil`, `numbers` (64-bit floating point numbers), `boolean` and `string`.
+Lox is a dynamically typed language, variables can have values of four types: `nil`, `number` (64-bit floating point numbers), `boolean` and `string`.
 
 ```kotlin
-var x = 5;
+var x = 5.8;
 var y;
 y = 10;
 var z = x * y;
+var i = true;
+print(i);
 print(z);
 ```
 
