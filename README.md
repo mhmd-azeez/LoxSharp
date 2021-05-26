@@ -1,5 +1,5 @@
 # LoxSharp
-Lox is a little programming language created by [Bob Nystrom](https://twitter.com/intent/user?screen_name=munificentbob) in his book [Crafting Interpreters](http://www.craftinginterpreters.com/). This is my attempt at recreating it in C#. I've published a web based version of the interpreter [here](https://encrypt0r.github.io/LoxSharp/).
+Lox is a little programming language created by [Bob Nystrom](https://twitter.com/intent/user?screen_name=munificentbob) in his book [Crafting Interpreters](http://www.craftinginterpreters.com/). This is my attempt at recreating it in C#. I've published a web based version of the interpreter [here](https://mhmd-azeez.github.io/LoxSharp/).
 
 ## What's implemented
 The interprer is still a work in progress as I've not finished the book yet.
